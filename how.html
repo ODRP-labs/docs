@@ -121,7 +121,7 @@
       destination that Long Haul creates and owns — its <em>own</em> Identity, its <em>own</em> keys, its
       <em>own</em> hash — that simply <em>wears the handle</em> of a node living on the far mesh. It is
       not a clone and it holds nobody else's keys. The only thing it borrows from the far node is the
-      human-readable handle, so you recognize it.</p>
+      human-readable handle, so you recognize it. Every puppet also announces that display name with a trailing “ (P)” — a visible flag that it's a Long Haul puppet and its traffic crosses the radio hop in cleartext; it's cosmetic only, the internal routing name stays clean.</p>
     <div class="note"><p><span class="lbl">Why it exists</span>The real far-side node lives on a mesh you
       can't reach directly. The puppet is a local stand-in you can address like any other contact — and
       because it's a genuine destination Long Haul owns, it can legitimately decrypt what you send it, as
@@ -296,7 +296,7 @@
       decrypt-and-re-originate — and lets native, fully-encrypted Reticulum ride straight over the modem,
       for the day the rules no longer apply. The advantage of a switch over ripping Long Haul out is that
       it stays in as the <em>plumbing</em>: it still handles the port wiring, the node and modem
-      connection, ALE frequency selection, and the rest of the transport setup. So you flip one flag and
+      connection, ALE frequency selection <em>(planned)</em>, and the rest of the transport setup. So you flip one flag and
       everything is already wired — instead of hand-configuring Reticulum onto the radio from scratch on
       the day you need it most.</p>
     <div class="note"><p><span class="lbl" style="color:var(--alert)">Status</span>The flip is <em>built</em>
@@ -353,7 +353,10 @@
     <div class="note"><p><span class="lbl" style="color:var(--alert)">Status</span>The near-side half is
       <em>built</em>: you DM your local Long Haul node and it answers <code>status</code>, arms pairing,
       re-announces, sets the data cap, switches the modem, and restarts — gated to allow-listed nodes and
-      audited. And the far-side half is <em>built</em> too: the settings the two paired gateways <em>share</em>
+      audited. It's also drivable from a browsable control page: each gateway hosts a NomadNet <code>.mu</code>
+      page with live status and point-and-click Restart / Revert / Refresh, so there's nothing to memorize —
+      identity-gated with a whitelisted near-side action set (pairing, modem and set-limit can't ride a page
+      link), and proven live over real Reticulum on the VM. And the far-side half is <em>built</em> too: the settings the two paired gateways <em>share</em>
       — the modem/band, the data cap, and the operating frequency — now change on <em>both</em> sides at once
       through a safe, signed handshake with <strong>auto-revert</strong>. If the new setting doesn't
       re-establish contact, each gateway independently rolls back to the last-known-good — and because the
@@ -419,6 +422,9 @@
             <li><span class="tick">✓</span><span>Browse NomadNet pages &amp; files over the radio — cleartext, station-ID'd, cap-bounded.</span></li>
             <li><span class="tick">✓</span><span>Encrypted-content guard — refuses to transmit already-encrypted content (keeps the air leg legal).</span></li>
             <li><span class="tick">✓</span><span>Radio dial (CAT) control + coordinated QSY — retune both stations together, auto-revert.</span></li>
+            <li><span class="tick">✓</span><span>NomadNet control page for C2 — point-and-click status &amp; actions, browsable in MeshChat / Sideband / NomadNet.</span></li>
+            <li><span class="tick">✓</span><span>Gateway can join an existing Reticulum hub (<code>LONGHAUL_JOIN</code>) so its nodes are browsable where MeshChat / Sideband already look.</span></li>
+            <li><span class="tick">✓</span><span>Puppet transparency tag &ldquo; (P)&rdquo; on every stood-up puppet.</span></li>
           </ul>
         </div>
         <div>
