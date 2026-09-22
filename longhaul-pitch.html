@@ -1,0 +1,474 @@
+<title>Long Haul</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --ground:#F1EBDE; --surface:#FAF6EC; --surface-2:#E9E1CF;
+    --ink:#1A1610; --ink-soft:#5C5445; --line:#D6CBB6;
+    --accent:#A85D0C; --accent-bright:#C6771A;
+    --secure:#186E79; --alert:#A23A29;
+    --shadow:0 1px 2px rgba(40,30,10,.06),0 8px 26px rgba(40,30,10,.07);
+  }
+  :root:not([data-theme="light"]){
+    @media (prefers-color-scheme: dark){
+      --ground:#13100B; --surface:#1C1811; --surface-2:#251F17;
+      --ink:#F1EADB; --ink-soft:#A99C84; --line:#332B20;
+      --accent:#E9A23C; --accent-bright:#F4B457;
+      --secure:#5CB9C6; --alert:#DB7059;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#13100B; --surface:#1C1811; --surface-2:#251F17;
+    --ink:#F1EADB; --ink-soft:#A99C84; --line:#332B20;
+    --accent:#E9A23C; --accent-bright:#F4B457;
+    --secure:#5CB9C6; --alert:#DB7059;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:"Archivo",system-ui,sans-serif; font-weight:400;
+    line-height:1.62; -webkit-font-smoothing:antialiased;
+    letter-spacing:-.002em;
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:0 24px}
+  section{padding:64px 0; border-top:1px solid var(--line)}
+  section:first-of-type{border-top:none}
+  p{max-width:64ch}
+  a{color:var(--accent)}
+  .mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace; font-size:.72rem; font-weight:500;
+    letter-spacing:.22em; text-transform:uppercase; color:var(--accent);
+    display:flex; align-items:center; gap:12px; margin:0 0 22px;
+  }
+  .eyebrow::after{content:""; flex:1; height:1px; background:var(--line)}
+
+  h1,h2,h3{font-weight:800; line-height:1.08; text-wrap:balance; margin:0}
+  h2{font-size:clamp(1.55rem,3.6vw,2.3rem); letter-spacing:-.02em}
+  h3{font-size:1.06rem; font-weight:600; letter-spacing:-.01em}
+  .lede{font-size:1.16rem; color:var(--ink-soft); max-width:60ch}
+
+  /* ---------- hero ---------- */
+  .hero{padding:76px 0 60px; border-top:none}
+  .tag{
+    font-family:"IBM Plex Mono",monospace; font-size:.72rem; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--ink-soft);
+    display:inline-flex; align-items:center; gap:10px;
+    border:1px solid var(--line); border-radius:999px; padding:7px 14px;
+  }
+  .tag .dot{width:7px; height:7px; border-radius:50%; background:var(--accent);
+    box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+  .wordmark{
+    font-family:"IBM Plex Mono",monospace; font-weight:600;
+    font-size:clamp(2.6rem,9vw,5.2rem); letter-spacing:.04em; line-height:.95;
+    margin:26px 0 8px; text-transform:uppercase;
+  }
+  .wordmark b{color:var(--accent); font-weight:600}
+  .bluf{font-size:clamp(1.3rem,3vw,1.75rem); font-weight:600; letter-spacing:-.02em;
+    max-width:26ch; margin:20px 0 0; line-height:1.22}
+  .bluf .k{color:var(--secure)} .bluf .a{color:var(--accent)}
+  .hero .sub{margin-top:18px; color:var(--ink-soft); max-width:56ch}
+
+  /* ---------- problems ---------- */
+  .probs{display:flex; flex-direction:column; gap:2px; margin-top:8px;
+    border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--line)}
+  .prob{background:var(--surface); padding:26px 26px 28px; display:grid;
+    grid-template-columns:auto 1fr; gap:20px; align-items:start}
+  .prob .n{font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:.82rem;
+    color:var(--alert); border:1px solid color-mix(in srgb,var(--alert) 45%,var(--line));
+    border-radius:8px; padding:5px 9px; white-space:nowrap; margin-top:2px}
+  .prob h3{margin-bottom:8px}
+  .prob p{margin:0; color:var(--ink-soft); max-width:62ch; font-size:.98rem}
+  .aside{margin-top:12px; padding-left:14px; border-left:2px solid var(--accent);
+    color:var(--ink); font-size:.94rem; font-style:italic; max-width:58ch}
+  .aside b{font-style:normal; color:var(--accent)}
+
+  /* ---------- approach ---------- */
+  .flow{display:flex; flex-direction:column; gap:16px; margin-top:30px}
+  .step{display:grid; grid-template-columns:auto 1fr; gap:18px; align-items:start}
+  .step .g{font-family:"IBM Plex Mono",monospace; color:var(--accent); font-size:1.1rem;
+    font-weight:600; line-height:1.5; width:1.4em; text-align:center}
+  .step p{margin:0; color:var(--ink); max-width:60ch}
+  .step p b{color:var(--accent)}
+  .step p .sec{color:var(--secure); font-weight:600}
+
+  /* ---------- diagram ---------- */
+  .figwrap{margin-top:14px; background:var(--surface); border:1px solid var(--line);
+    border-radius:16px; padding:8px; box-shadow:var(--shadow)}
+  .figgrid{display:grid; grid-template-columns:1fr; gap:8px}
+  @media(min-width:760px){.figgrid{grid-template-columns:0.82fr 1.18fr}}
+  .panel{background:var(--surface-2); border-radius:11px; padding:18px 18px 16px;
+    overflow-x:auto}
+  .panel .plabel{font-family:"IBM Plex Mono",monospace; font-size:.7rem; font-weight:500;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--ink-soft); margin-bottom:12px}
+  .panel svg{display:block; width:100%; height:auto; min-width:300px}
+  .cap{color:var(--ink-soft); font-size:.9rem; margin:12px 2px 2px; max-width:60ch}
+  .legend{display:flex; flex-wrap:wrap; gap:18px 26px; margin:20px 4px 0;
+    font-family:"IBM Plex Mono",monospace; font-size:.74rem; color:var(--ink-soft)}
+  .legend span{display:inline-flex; align-items:center; gap:9px}
+  .legend i{width:26px; height:0; display:inline-block}
+  .lg-mesh{border-top:2.5px solid var(--secure)}
+  .lg-pup{border-top:2.5px dashed var(--accent)}
+  .lg-air{border-top:3px dashed var(--accent-bright)}
+
+  /* svg element theming */
+  .s-node{fill:var(--surface); stroke:var(--secure); stroke-width:2}
+  .s-hop{fill:var(--surface); stroke:var(--accent); stroke-width:2}
+  .s-link{stroke:var(--secure); stroke-width:2.4; fill:none}
+  .s-pup{fill:none; stroke:var(--accent); stroke-width:1.7; stroke-dasharray:5 4}
+  .s-pup-link{stroke:var(--accent); stroke-width:1.6; stroke-dasharray:4 4; fill:none}
+  .s-air{stroke:var(--accent-bright); stroke-width:3.4; stroke-dasharray:9 7; fill:none}
+  .s-box{fill:none; stroke:var(--line); stroke-width:1.4}
+  .s-t{fill:var(--ink); font-family:"IBM Plex Mono",monospace; font-weight:600; font-size:13px}
+  .s-tp{fill:var(--accent); font-family:"IBM Plex Mono",monospace; font-weight:500; font-size:12px}
+  .s-lbl{fill:var(--ink-soft); font-family:"IBM Plex Mono",monospace; font-weight:500;
+    font-size:10.5px; letter-spacing:.08em; text-transform:uppercase}
+  .s-air-lbl{fill:var(--accent); font-family:"IBM Plex Mono",monospace; font-weight:600;
+    font-size:10.5px; letter-spacing:.06em}
+  @media (prefers-reduced-motion:no-preference){
+    .s-air{animation:flow 1.1s linear infinite}
+    @keyframes flow{to{stroke-dashoffset:-32}}
+  }
+
+  /* ---------- features ---------- */
+  .fgrid{display:grid; grid-template-columns:1fr; gap:14px; margin-top:26px}
+  @media(min-width:640px){.fgrid{grid-template-columns:1fr 1fr}}
+  .feat{background:var(--surface); border:1px solid var(--line); border-radius:13px;
+    padding:22px 22px 24px}
+  .feat .ft{font-family:"IBM Plex Mono",monospace; font-size:.7rem; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--accent); margin-bottom:9px}
+  .feat h3{margin-bottom:7px}
+  .feat p{margin:0; color:var(--ink-soft); font-size:.94rem; max-width:48ch}
+  .feat.wide{grid-column:1/-1}
+  .modemtab{display:grid; grid-template-columns:auto 1fr; gap:12px 20px; margin-top:4px;
+    align-items:baseline}
+  .modemtab .band{font-family:"IBM Plex Mono",monospace; font-size:.82rem; color:var(--secure);
+    font-weight:600; letter-spacing:.04em}
+  .modemtab .list{color:var(--ink); font-size:.95rem}
+  .modemtab .list em{font-style:normal; color:var(--accent); font-weight:600}
+  .planned,.proven{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:.62rem;
+    letter-spacing:.14em; text-transform:uppercase; color:var(--ink-soft);
+    border:1px solid var(--line); border-radius:5px; padding:2px 6px; margin-left:8px;
+    vertical-align:middle}
+  .proven{color:var(--secure); border-color:color-mix(in srgb,var(--secure) 55%,var(--line))}
+
+  /* ---------- faq ---------- */
+  .faq{margin-top:24px; display:flex; flex-direction:column; gap:2px;
+    border:1px solid var(--line); border-radius:14px; overflow:hidden; background:var(--line)}
+  .faq details{background:var(--surface)}
+  .faq summary{cursor:pointer; padding:18px 22px; font-weight:600; font-size:1rem;
+    list-style:none; display:flex; justify-content:space-between; gap:16px; align-items:center}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+"; color:var(--accent); font-family:"IBM Plex Mono",monospace;
+    font-size:1.25rem; line-height:1}
+  .faq details[open] summary::after{content:"\2013"}
+  .faq details p{margin:0 22px 20px; color:var(--ink-soft); font-size:.96rem; max-width:66ch}
+  .keynote{margin-top:22px; padding:20px 24px; background:var(--surface); border-radius:14px;
+    border-left:3px solid var(--secure); box-shadow:var(--shadow)}
+  .keynote p{margin:0; font-size:1.04rem; color:var(--ink)}
+  .keynote p b{color:var(--secure)}
+
+  /* ---------- status ---------- */
+  .status{background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding:30px 30px 32px; box-shadow:var(--shadow); margin-top:8px}
+  .chain{display:flex; flex-wrap:wrap; align-items:center; gap:8px 6px; margin:6px 0 24px;
+    font-family:"IBM Plex Mono",monospace; font-size:.78rem}
+  .chain b{background:var(--surface-2); border:1px solid var(--line); border-radius:7px;
+    padding:6px 10px; font-weight:500; color:var(--ink)}
+  .chain b.on{border-color:color-mix(in srgb,var(--accent) 55%,var(--line)); color:var(--accent)}
+  .chain b.sec{border-color:color-mix(in srgb,var(--secure) 55%,var(--line)); color:var(--secure)}
+  .chain .arw{color:var(--ink-soft)}
+  .worklist{list-style:none; padding:0; margin:16px 0 0; display:flex;
+    flex-direction:column; gap:10px}
+  .worklist li{display:grid; grid-template-columns:auto 1fr; gap:12px; color:var(--ink-soft);
+    font-size:.96rem; max-width:64ch}
+  .worklist .tick{color:var(--secure); font-weight:700}
+  .worklist .todo{color:var(--accent); font-weight:700}
+  .cta{margin-top:26px; font-size:1.12rem; font-weight:600; color:var(--ink);
+    max-width:52ch; letter-spacing:-.01em}
+
+  footer{border-top:1px solid var(--line); padding:30px 0 44px; color:var(--ink-soft);
+    font-family:"IBM Plex Mono",monospace; font-size:.74rem; letter-spacing:.04em}
+  footer .r{color:var(--accent)}
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="tag"><span class="dot"></span>Cleartext Reticulum bridge · early R&amp;D</span>
+    <div class="wordmark">LONG&nbsp;<b>HAUL</b></div>
+    <p class="bluf">A <span class="k">fully encrypted</span> Reticulum mesh at each site — bridged over ham radio, <span class="a">legally</span>, by making only the over-the-air hop cleartext.</p>
+    <p class="sub">Reticulum is a genuinely good post-internet mesh. Its one dealbreaker for ham radio is that it encrypts everything, and encryption is illegal on the amateur bands. Long Haul is the way around that: each mesh stays fully encrypted, and only the hop between them crosses in the clear — the one part the law is actually about.</p>
+  </header>
+
+  <section>
+    <div class="eyebrow">The wall everyone hits</div>
+    <h2>Three reasons "Reticulum over HF" keeps dead-ending</h2>
+    <div class="probs">
+      <div class="prob">
+        <span class="n">97.113</span>
+        <div>
+          <h3>Part 97 bans encryption on the ham bands</h3>
+          <p>US amateur rules prohibit transmitting messages "encoded for the purpose of obscuring their meaning." Encryption does exactly that. So encrypted traffic on the amateur bands isn't a grey area — it's flatly not allowed.</p>
+        </div>
+      </div>
+      <div class="prob">
+        <span class="n">by design</span>
+        <div>
+          <h3>Reticulum is encrypted, always — and that won't change</h3>
+          <p>There is no switch to turn it off; encryption is baked into the protocol. Reticulum's creator has said plainly that unencrypted operation will never be natively supported — the position is that the regulations should change, not the software.</p>
+          <p class="aside"><b>Sure.</b> And have you ever been to a ham club meeting? That policy change is not coming. We need an answer that works with the rules as they are.</p>
+        </div>
+      </div>
+      <div class="prob">
+        <span class="n">no relay</span>
+        <div>
+          <h3>You can't just forward the traffic, either</h3>
+          <p>The obvious workaround — a middleman that relays packets — doesn't work. If you aren't the destination node, Reticulum never exposes the content to you. A relay sees ciphertext it has no keys for. There is nothing to decrypt in transit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">The approach</div>
+    <h2>Don't intercept it. Become the endpoint.</h2>
+    <p class="lede">Long Haul never disables a mesh's encryption and never reads someone else's traffic. It becomes a legitimate place to send yours — then carries that one cross-site hop in the clear.</p>
+    <div class="flow">
+      <div class="step"><span class="g">01</span><p>For every node on the far side, Long Haul stands up a real, addressable <b>stand-in</b> on your local mesh — a puppet. You point traffic at it exactly like any other contact.</p></div>
+      <div class="step"><span class="g">02</span><p>Because that puppet is a genuine Reticulum destination Long Haul owns, it receives and decrypts your message <b>legitimately — as the endpoint</b>, not as a snoop. No keys stolen, nothing forged.</p></div>
+      <div class="step"><span class="g">03</span><p>It hands the plaintext to your modem and sends it over the radio <b>in the clear</b> — the one leg the law actually cares about.</p></div>
+      <div class="step"><span class="g">04</span><p>A Long Haul station on the far end <span class="sec">re-encrypts</span> it and injects it back into that mesh, addressed to the <b>real</b> node. Every local mesh stays normal, fully-encrypted Reticulum — the clear leg is only the hop <em>between</em> them.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Same network, two viewpoints</div>
+    <h2>Seamless to the user. Two meshes underneath.</h2>
+    <div class="figwrap">
+      <div class="figgrid">
+
+        <div class="panel">
+          <div class="plabel">What your network looks like to you</div>
+          <svg viewBox="0 0 320 300" role="img" aria-label="A normal mesh: a hub in the middle with you and your contacts around it, all looking like real nodes.">
+            <line class="s-link" x1="160" y1="150" x2="160" y2="56"/>
+            <line class="s-link" x1="160" y1="150" x2="262" y2="94"/>
+            <line class="s-link" x1="160" y1="150" x2="262" y2="208"/>
+            <line class="s-link" x1="160" y1="150" x2="160" y2="248"/>
+            <line class="s-link" x1="160" y1="150" x2="86" y2="150"/>
+            <g>
+              <rect class="s-node" x="120" y="128" width="80" height="44" rx="9"/>
+              <text class="s-t" x="160" y="155" text-anchor="middle">HUB</text>
+            </g>
+            <g><rect class="s-node" x="122" y="26" width="76" height="30" rx="8"/><text class="s-t" x="160" y="46" text-anchor="middle">YOU</text></g>
+            <g><rect class="s-node" x="226" y="72" width="76" height="30" rx="8"/><text class="s-t" x="264" y="92" text-anchor="middle">SUE</text></g>
+            <g><rect class="s-node" x="226" y="196" width="76" height="30" rx="8"/><text class="s-t" x="264" y="216" text-anchor="middle">DAVE</text></g>
+            <g><rect class="s-node" x="122" y="242" width="76" height="30" rx="8"/><text class="s-t" x="160" y="262" text-anchor="middle">FIELD-2</text></g>
+            <g><rect class="s-node" x="10" y="135" width="76" height="30" rx="8"/><text class="s-t" x="48" y="155" text-anchor="middle">BASE</text></g>
+          </svg>
+          <p class="cap">A normal mesh — a hub in the middle, you and your contacts around it. Every name looks like a real node on your network. You tap one, it goes.</p>
+        </div>
+
+        <div class="panel">
+          <div class="plabel">What's actually on the air</div>
+          <svg viewBox="0 0 700 340" role="img" aria-label="Two hub-and-spoke meshes. On each, the hub reaches real local nodes over solid links and puppet stand-ins inside Long Haul over dashed links; the two Long Haul nodes are joined by a cleartext radio hop.">
+            <rect class="s-box" x="14" y="40" width="320" height="262" rx="12"/>
+            <rect class="s-box" x="366" y="40" width="320" height="262" rx="12"/>
+            <text class="s-lbl" x="26" y="62">Your site — encrypted</text>
+            <text class="s-lbl" x="378" y="62">Far site — encrypted</text>
+
+            <!-- Long Haul containers (puppets live INSIDE) — spread apart to clear the hop label -->
+            <rect x="170" y="96" width="140" height="182" rx="11" style="fill:none;stroke:var(--accent);stroke-width:2"/>
+            <rect x="390" y="96" width="140" height="182" rx="11" style="fill:none;stroke:var(--accent);stroke-width:2"/>
+            <text class="s-tp" x="240" y="118" text-anchor="middle" style="font-size:11.5px">LONG HAUL A</text>
+            <text class="s-tp" x="460" y="118" text-anchor="middle" style="font-size:11.5px">LONG HAUL B</text>
+
+            <!-- cleartext hop between the two Long Haul nodes -->
+            <path class="s-air" d="M310 187 H390"/>
+            <text class="s-air-lbl" x="350" y="150" text-anchor="middle">CLEARTEXT</text>
+            <text class="s-air-lbl" x="350" y="206" text-anchor="middle">on air</text>
+            <text class="s-air-lbl" x="350" y="221" text-anchor="middle">legal</text>
+
+            <!-- left links: solid hub->real (3), dashed hub->puppet (2) -->
+            <line class="s-link" x1="125" y1="175" x2="86" y2="79"/>
+            <line class="s-link" x1="125" y1="175" x2="86" y2="175"/>
+            <line class="s-link" x1="125" y1="175" x2="86" y2="272"/>
+            <line class="s-pup-link" x1="125" y1="175" x2="184" y2="168"/>
+            <line class="s-pup-link" x1="125" y1="175" x2="184" y2="218"/>
+            <!-- right links (mirror): solid hub->real (2), dashed hub->puppet (3) -->
+            <line class="s-link" x1="575" y1="175" x2="614" y2="79"/>
+            <line class="s-link" x1="575" y1="175" x2="614" y2="272"/>
+            <line class="s-pup-link" x1="575" y1="175" x2="516" y2="148"/>
+            <line class="s-pup-link" x1="575" y1="175" x2="516" y2="196"/>
+            <line class="s-pup-link" x1="575" y1="175" x2="516" y2="244"/>
+
+            <!-- left nodes: 3 real locals, 2 puppets -->
+            <g><rect class="s-node" x="20" y="62" width="66" height="32" rx="8"/><text class="s-t" x="53" y="83" text-anchor="middle">YOU</text></g>
+            <g><rect class="s-node" x="20" y="159" width="66" height="32" rx="8"/><text class="s-t" x="53" y="180" text-anchor="middle">BASE</text></g>
+            <g><rect class="s-node" x="20" y="256" width="66" height="32" rx="8"/><text class="s-t" x="53" y="277" text-anchor="middle">FIELD-2</text></g>
+            <g><rect class="s-node" x="90" y="153" width="70" height="44" rx="9"/><text class="s-t" x="125" y="180" text-anchor="middle">HUB</text></g>
+            <g><rect class="s-pup" x="184" y="154" width="112" height="28" rx="7"/><text class="s-tp" x="240" y="172" text-anchor="middle">⟨SUE⟩</text></g>
+            <g><rect class="s-pup" x="184" y="204" width="112" height="28" rx="7"/><text class="s-tp" x="240" y="222" text-anchor="middle">⟨DAVE⟩</text></g>
+            <text class="s-lbl" x="240" y="268" text-anchor="middle">puppets</text>
+
+            <!-- right nodes (mirror): 2 real locals, 3 puppets -->
+            <g><rect class="s-node" x="614" y="62" width="66" height="32" rx="8"/><text class="s-t" x="647" y="83" text-anchor="middle">SUE</text></g>
+            <g><rect class="s-node" x="614" y="256" width="66" height="32" rx="8"/><text class="s-t" x="647" y="277" text-anchor="middle">DAVE</text></g>
+            <g><rect class="s-node" x="540" y="153" width="70" height="44" rx="9"/><text class="s-t" x="575" y="180" text-anchor="middle">HUB</text></g>
+            <g><rect class="s-pup" x="404" y="134" width="112" height="28" rx="7"/><text class="s-tp" x="460" y="152" text-anchor="middle">⟨YOU⟩</text></g>
+            <g><rect class="s-pup" x="404" y="182" width="112" height="28" rx="7"/><text class="s-tp" x="460" y="200" text-anchor="middle">⟨BASE⟩</text></g>
+            <g><rect class="s-pup" x="404" y="230" width="112" height="28" rx="7"/><text class="s-tp" x="460" y="248" text-anchor="middle">⟨FIELD-2⟩</text></g>
+            <text class="s-lbl" x="460" y="268" text-anchor="middle">puppets</text>
+          </svg>
+          <p class="cap">Same star — but the hub reaches <span class="mono">⟨SUE⟩</span> and <span class="mono">⟨DAVE⟩</span> over <em>dashed</em> links, because those are puppets Long Haul hosts for the far side — each a real Reticulum node in its own right, standing in locally for the SUE and DAVE you can't reach directly. Their traffic crosses the cleartext hop to the <em>real</em> SUE and DAVE on the far mesh.</p>
+        </div>
+
+      </div>
+      <div class="legend">
+        <span><i class="lg-mesh"></i> hub ↔ real node</span>
+        <span><i class="lg-pup"></i> hub → puppet (inside Long Haul)</span>
+        <span><i class="lg-air"></i> cleartext radio hop</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">The honest answer</div>
+    <h2>“Becoming the endpoint” isn't spoofing — and it isn't a backdoor</h2>
+    <p class="lede">If a gateway decrypts your traffic, the fair question is: doesn't it hold your keys, stand in for you, and open a hole someone else could walk through? Here's the mechanical answer, point by point.</p>
+    <div class="flow">
+      <div class="step"><span class="g">→</span><p><b>Your private keys never leave your node.</b> The gateway never has them and never asks for them. Nothing is handed over, nothing is stolen, nothing is forged.</p></div>
+      <div class="step"><span class="g">→</span><p><b>A puppet is a separate node — not a copy of yours.</b> Every Reticulum destination has two different “names”: a <span class="sec">destination hash</span>, its real address, derived from its own key pair and impossible to copy or forge; and a plain <b>display label</b> — the <em>handle</em> you'd recognize a contact by — that any node can set. A puppet is a brand-new destination with its <em>own</em> keys and its <em>own</em> hash. The only thing it borrows from the far-side node is that human-readable handle — so you recognize it.</p></div>
+      <div class="step"><span class="g">→</span><p><b>Decrypting your message is delivery, not interception.</b> Reticulum routes on the hash, never the handle. When you address a puppet, that puppet genuinely <em>is</em> the endpoint — it decrypts its own mail exactly like any node does. It cannot read traffic addressed to the real far-side node (different hash, different keys), and it can't touch anything outside its own puppets. It is not a general decryptor.</p></div>
+      <div class="step"><span class="g">→</span><p><b>The radio hop carries no Reticulum.</b> Each gateway ends one encrypted network and re-originates into the other — a store-and-forward bridge between two healthy, fully-encrypted meshes. Routing never crosses the cleartext leg, so no mesh has its encryption disabled. What <em>is</em> exposed, plainly, is the data on that middle hop: it crosses in the clear. That's the trade, stated out loud, not a hidden cost.</p></div>
+      <div class="step"><span class="g">→</span><p><b>You opt in, on your own hardware.</b> Both gateways belong to your group, run by people you already trust. No one's traffic is exposed unless they choose to address a puppet. The genuinely new exposure is the HF hop in the clear — the content, and to any listener the traffic pattern around it: which handle is talking to which handle, when, and how much. (Handles are pseudonyms; the callsign that ties it to a real operator is on the air in any mode anyway.) That's the legal requirement, and the cost every ham already accepts on the air.</p></div>
+      <div class="step"><span class="g">→</span><p><b>Watching both legs doesn't unravel it.</b> The mesh legs use ephemeral keys — per-link for established Links (Curve25519 ECDH), per-packet for one-off sends — with AES-256 and forward secrecy, and the two sides are different sessions — so seeing the ciphertext on one side and the cleartext on the HF leg hands no one your keys.</p></div>
+      <div class="step"><span class="g">→</span><p><b>What you don't get: end-to-end proof of sender.</b> Native Reticulum lets a recipient verify exactly who sent a message; across a Long Haul bridge that chain is broken — the far node sees identity vouched for by the gateway operators, not signed by the real you. In a closed group that already trusts its gateways that's an accepted trade — but it's a trade, and I name it.</p></div>
+    </div>
+    <div class="keynote">
+      <p><b>The short version:</b> a puppet is a real, legitimate destination that happens to wear a familiar name — so decrypting what's addressed to it is ordinary delivery, on hardware you chose, and no key ever changes hands.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Built to be flexible</div>
+    <h2>Your modem, your band, your mission</h2>
+    <div class="fgrid">
+      <div class="feat wide">
+        <div class="ft">Modem-agnostic</div>
+        <h3>Pick the radio for the job</h3>
+        <div class="modemtab">
+          <span class="band">HF</span><span class="list"><em>Mercury</em> (flagship) <span class="proven">proven in sim</span> · VARA HF <span class="planned">planned</span> · ARDOP <span class="planned">planned</span></span>
+          <span class="band">VHF / UHF</span><span class="list">AX.25 (Direwolf) <span class="proven">proven in sim</span> · VARA FM <span class="planned">planned</span></span>
+        </div>
+        <p style="margin-top:14px">Two modes per link: <strong style="color:var(--accent)">ARQ</strong> — acknowledged, retried, confirmed delivery (recommended for anything that has to arrive intact) — or <strong>fire-and-forget</strong> for broadcast and low-latency tactical traffic.</p>
+      </div>
+      <div class="feat">
+        <div class="ft">More than text</div>
+        <h3>Carries the whole payload</h3>
+        <p>Images, files, position/telemetry, and remote commands — not just chat. On HF you size it to the band; on faster links, more.</p>
+      </div>
+      <div class="feat">
+        <div class="ft">Real routing</div>
+        <h3>Address the actual node</h3>
+        <p>You reach specific far-side nodes, not one dumb gateway. Routing survives the hop — even nodes sitting behind a relay.</p>
+      </div>
+      <div class="feat">
+        <div class="ft">Guard rails</div>
+        <h3>Per-link data limits <span class="proven">proven in sim</span></h3>
+        <p>The gateway paces its writes to the modem's own queue so nothing overruns it, and each link has a data cap sized to the modem. Address a puppet with something oversized and it bounces back — on your own mesh, before the radio ever keys — with the real numbers. You set the cap per link; nobody shoves a 1&nbsp;GB file across an HF leg. (Proven in sim; not yet on a radio rig.)</p>
+      </div>
+      <div class="feat">
+        <div class="ft">Control</div>
+        <h3>Remote command &amp; control <span class="proven">proven in sim</span></h3>
+        <p>An unattended gateway you can't walk to, you manage by messaging the Long Haul node itself — status, arm pairing, set the data cap, switch modem, restart — gated to authorized local users, with an audit trail. And it reaches across the hop too: the settings the two paired gateways <em>share</em> — modem/band, data cap, and operating frequency — now change on <em>both</em> at once through a signed handshake with <strong>auto-revert</strong> (if the new setting kills the link, each side rolls itself back to what worked). All proven in sim. Still ahead: a read-only peek at the far gateway's status, and 2G ALE to auto-pick the working HF frequency.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Common questions</div>
+    <h2>A few things that come up</h2>
+    <div class="faq">
+      <details>
+        <summary>So does it break Reticulum's encryption, or not?</summary>
+        <p>Both answers are true, and the honest one is both at once. Each mesh is unchanged — normal, fully-encrypted Reticulum, routing intact. But the hop from one mesh to the other is cleartext, so that data is <em>not</em> encrypted on the radio leg. Picture the two meshes as one network and the encryption simply isn't there in the middle. That's the deliberate trade that makes it legal — and it's exactly why this only fits traffic you're willing to send in the open. What Long Haul never does is switch off encryption <em>inside</em> a mesh or force its way in; what it does is carry the one cross-site hop in the clear.</p>
+      </details>
+      <details>
+        <summary>Why not just test the link with VARA or plain Mercury?</summary>
+        <p>That proves the RF path — propagation, power, antenna — in a snapshot, and it's worth doing. What it doesn't prove is the <em>workload over time</em>. A single connect-exchange-disconnect tells you nothing about the sustained, real-world traffic you'd see on a Reticulum network — multi-node message flow, file backlogs, retries, roster/presence sync — carried across hours of shifting conditions: the day/night cycle, changing weather and ionospheric propagation, the duty cycle and solar draw of staying up, and (eventually) the ALE layer picking your working frequency. That's what Long Haul puts over a real modem under real conditions. (The Reticulum protocol itself runs inside each mesh, not on the HF leg — so this tests the <em>link and the load</em>, not native Reticulum-over-HF, which is the day-of mode.)</p>
+      </details>
+      <details>
+        <summary>Can the gateway read any Reticulum traffic, or only mine?</summary>
+        <p>Only traffic addressed to the puppets it hosts — the endpoints on the far side of the leg that you're actually addressing. It holds no other keys, so it can't read anything else and never touches it. It is not a general Reticulum decryptor, and couldn't be.</p>
+      </details>
+      <details>
+        <summary>Doesn't cleartext on the air kill anonymity?</summary>
+        <p>Long Haul is built for a closed group who already know each other, so member-to-member anonymity was never the goal — a hash wasn't hiding your identity from people who already know your node. Over the air, messages are addressed by your <em>handle</em> — your label or display name — not by the routing hash, and a handle is a pseudonym you pick: “Purple Bears” is no more <em>you</em> than any other handle. So an outside listener sees the pattern between handles — which handle is talking to which handle, when, and how much — not identities. The one thing that ties a transmission to a real person is the operator's callsign, which Part 97 puts on the air in <em>any</em> mode, Long Haul or not. Outsider anonymity was never the ham-radio promise; legality and reach are what this buys.</p>
+      </details>
+      <details>
+        <summary>Do the two gateways talk Reticulum to each other over the radio?</summary>
+        <p>No. Over the air it's a plain framed byte pipe between the two gateways — acknowledgement and retry there are the modem's job (Mercury ARQ, AX.25 connected mode). Reticulum lives on each side only; the gateway terminates it before the radio and re-originates it after.</p>
+      </details>
+      <details>
+        <summary>What actually travels in the clear on the HF leg?</summary>
+        <p>The payloads you addressed to puppets, plus the node presence and handles Long Haul needs to know which puppets to stand up. Nothing else. Everything inside each local mesh stays normal, fully-encrypted Reticulum.</p>
+      </details>
+      <details>
+        <summary>Is it Part 97 compliant beyond the encryption rule?</summary>
+        <p>Yes, by design. The over-the-air data is cleartext (§97.113); station ID is built in, not bolted on — the operator's callsign goes on the air as plain text (<span class="mono">DE &lt;call&gt;</span> appended to every Mercury frame; the source-address field on AX.25), satisfying §97.119, and a gateway with no callsign set refuses to key. The mesh's users ride as <em>third-party traffic</em> (§97.115) under that licensed operator. And the on-air format is <em>published</em> — the message content is plaintext and the exact byte layout is public, down to the fragment header and the signed envelope. The only cryptography is an appended Ed25519 <em>signature</em> that authenticates the sending station without hiding a thing — the opposite of a code “intended to obscure.”</p>
+      </details>
+      <details>
+        <summary>Does everyone on the mesh need a ham license?</summary>
+        <p>No — only the two HF <em>station operators</em> do. Everyone else on a mesh can be unlicensed: the licensed operator carries their messages as <em>third-party traffic</em> (§97.115), the same rule that lets a licensed ham relay a non-ham's message. So a whole group can run their Reticulum handles behind one or two licensed gateways — only the folks keying the HF radios need a ticket.</p>
+      </details>
+      <details>
+        <summary>Does Long Haul do mesh networking or multi-hop routing across many sites?</summary>
+        <p>Not yet — today it's a <strong>point-to-point</strong> bridge between <strong>two</strong> sites. Each site can be a full, normal Reticulum mesh with as many local nodes as you like — that part's supported and proven — but the Long Haul link itself joins exactly two gateways over one HF hop. Linking three or more sites, or relaying across several HF hops (a mesh of gateways), is a later feature. The discipline is simple: get two-site point-to-point rock-solid and proven on real radios first, then extend.</p>
+      </details>
+      <details>
+        <summary>“Encryption is gravity” — isn't this just not what Reticulum was made for?</summary>
+        <p>It's a fair challenge, and it usually arrives with the Zen of Reticulum's “<em>Encryption Is Not A Feature</em>” — the point that encryption is structural rather than a bolt-on, and that pulling it out would break routing itself. That's exactly correct, and Long Haul is built around it, not against it.</p>
+        <p>The distinction that dissolves the objection: Long Haul never strips encryption <em>out of Reticulum</em>. Every mesh runs full, unmodified Reticulum — routing, signatures, path validation, all intact. The cleartext leg isn't Reticulum at all: each gateway <em>terminates</em> one encrypted Reticulum network and <em>re-originates</em> into the other, with a plain framed byte pipe over the radio in between. Reticulum's internals never run in the clear, so the exact failure the Zen warns about — routing breaking because packets went plaintext — never happens. The honest other half: seen as one end-to-end path, your data <em>does</em> cross that middle hop in the clear. That's the deliberate, legal trade, and the reason this only fits traffic you'd send in the open.</p>
+        <p>Some will still say this isn't what Reticulum was made for — not what the designer intended. But designers rarely get to dictate what a product ends up being used for. Masonry bricks become wheel chocks; old gym equipment becomes a clothes rack; anyone who's ever held a wrench has used it as a hammer; the chainsaw was first designed for surgery during childbirth. The person who decides what a tool is for is the end user, not the designer.</p>
+        <p>Beyond that, Long Haul is a test bed. An automaker doesn't rate a car's safety by sending a stunt driver backwards up I-95 at rush hour to crash into people — that's illegal and reckless. They use a controlled environment: a crash-test dummy, a barrier, sixty into a wall behind bulletproof glass. Long Haul is that. It isn't a final answer; it's a way to take Reticulum and test it in a controlled, legal, repeatable environment.</p>
+        <p>Take a car off the road — did you lose the point of the car? Take encryption off Reticulum — did you lose the point of Reticulum? Depends which point you mean. The whole point of a car is to move people; the whole point of Reticulum is to be an encrypted network. And you can't test an encrypted network over HF — so yes, I pulled the encryption off the HF leg, so I could test everything else: the radio, the duty cycle, the solar setup it takes to hold 100% uptime, data-transfer rates, signal-to-noise ratios, message-backlog handling, RF propagation — everything you can't test with plain ham radio, plain LoRa, or plain Reticulum.</p>
+        <p>Is it a compromise? Maybe — the same way putting a car in a crash-test rig is a compromise, if that's how you want to word it. I'm not here to reinvent Reticulum, and I'm not here to rip the encryption out of it. I'm building a way for you to practice using your system before it's too late.</p>
+        <p>A last word: some of you may read all this and conclude I don't respect Mark's work or his design. It's the opposite. I'm genuinely impressed by Reticulum and invested in the project — the only shortcoming I can see is that today there's no legitimate way to test it on HF, and Long Haul is my attempt to fill that gap with an isolated test bed: to prove the system, as designed, is as robust and undefeatable as I believe it is.</p>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Where it is right now</div>
+    <h2>Proven in simulation. Ready for real radios.</h2>
+    <div class="status">
+      <p style="margin-top:0">The full stack already works together on the bench — real Reticulum nodes, a <strong>real Mercury</strong> HF modem and a real Direwolf AX.25 modem, bridged over a virtual sound card on a radio-like shared medium (a keyed side hears nothing). A message crosses the entire chain and lands at the right node:</p>
+      <div class="chain">
+        <b class="sec">Bob</b><span class="arw">→</span><b>encrypted mesh</b><span class="arw">→</span><b class="on">Long Haul</b><span class="arw">→</span><b class="on">Mercury</b><span class="arw">→</span><b class="on">radio (cleartext)</b><span class="arw">→</span><b class="on">Mercury</b><span class="arw">→</span><b class="on">Long Haul</b><span class="arw">→</span><b>encrypted mesh</b><span class="arw">→</span><b class="sec">Sue</b>
+      </div>
+      <ul class="worklist">
+        <li><span class="tick">✓</span><span><strong>Full flow over Mercury ARQ.</strong> Bob reaches an isolated Sue across the whole chain — 102 s, zero retries. Both directions at once, queued together: both delivered in 84 s.</span></li>
+        <li><span class="tick">✓</span><span><strong>Files, not just text.</strong> A 3 KB image, a file attachment and a telemetry blob arrived byte-exact (135 s). Bigger: 20 KB in 327 s, 50 KB in 690 s — roughly 100 bytes/s on a clean simulated channel. Text and telemetry are seconds; a 200 KB photo is about 35 minutes.</span></li>
+        <li><span class="tick">✓</span><span><strong>Noisy channel.</strong> Both-ways text at ~2 dB SNR delivered with zero retries (Mercury dropped itself into its robust mode). At ~−3 dB the full image + file + telemetry payload still arrived byte-exact, with a real lost frame resent, in about 20 minutes. It keeps completing down to −7 dB and gives out near −8.6 dB, where the connect handshake itself can't finish — that's Mercury's own rated floor, so Long Haul adds no penalty of its own.</span></li>
+        <li><span class="tick">✓</span><span><strong>Second modem family.</strong> AX.25 connected mode on VHF/UHF via Direwolf: text in 18 s; both ways plus the same image + file + telemetry byte-exact in 117 s, Direwolf's own retransmissions covering a few lost frames. Same gateway, same flows.</span></li>
+        <li><span class="tick">✓</span><span>Nodes self-announce; Long Haul auto-builds puppets and tears them down when a node leaves. Even nodes sitting behind a relay still work.</span></li>
+        <li><span class="tick">✓</span><span>Since then, all proven in sim: gateway signatures + PIN pairing (the air leg is authenticated), first-come handle-collision handling, per-link data caps with a bounce-back, the config UI + a native tab in the station app, and a Long Haul control node you can message for status and near-side command &amp; control.</span></li>
+        <li><span class="tick">✓</span><span>And most recently (all sim): adversarial mode now <em>delivers</em> (encrypted Reticulum straight over Mercury, ciphertext-only on the air); coordinated far-side control (retune both gateways together, auto-revert); browsing NomadNet pages &amp; files over the radio, legally; an encrypted-content guard that refuses to put already-encrypted data on the air; and CAT control of the radio's own dial.</span></li>
+        <li><span class="todo">→</span><span>Still to build: the other modem drivers (VARA HF/FM, ARDOP), leaner turns over ARQ (coalescing small frames), a live "frame 3 of 5, 62 %" transfer readout, and keep-calling on a marginal channel.</span></li>
+        <li><span class="todo">→</span><span>Every number above is simulation; an on-air floor will differ. Needs a current upstream Mercury build — the packaged 1.9.13 deadlocks two-way ARQ. The big next step: off the bench and onto real radios, between real operators.</span></li>
+      </ul>
+      <p class="cta">That's exactly where it needs other hams. If a legal, cleartext Reticulum bridge is something you'd run, I want to get it in front of you.</p>
+    </div>
+  </section>
+
+  <footer>
+    <span class="r">LONG HAUL</span> · cleartext Reticulum-over-radio bridge · very early R&amp;D · built &amp; proven in simulation, 2026
+  </footer>
+
+</div>

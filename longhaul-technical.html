@@ -1,0 +1,452 @@
+<title>Long Haul — How the Sausage Is Made</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --ground:#F1EBDE; --surface:#FAF6EC; --surface-2:#E9E1CF;
+    --ink:#1A1610; --ink-soft:#5C5445; --line:#D6CBB6;
+    --accent:#A85D0C; --accent-bright:#C6771A;
+    --secure:#186E79; --alert:#A23A29;
+    --shadow:0 1px 2px rgba(40,30,10,.06),0 8px 26px rgba(40,30,10,.07);
+  }
+  :root:not([data-theme="light"]){
+    @media (prefers-color-scheme: dark){
+      --ground:#13100B; --surface:#1C1811; --surface-2:#251F17;
+      --ink:#F1EADB; --ink-soft:#A99C84; --line:#332B20;
+      --accent:#E9A23C; --accent-bright:#F4B457;
+      --secure:#5CB9C6; --alert:#DB7059;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#13100B; --surface:#1C1811; --surface-2:#251F17;
+    --ink:#F1EADB; --ink-soft:#A99C84; --line:#332B20;
+    --accent:#E9A23C; --accent-bright:#F4B457;
+    --secure:#5CB9C6; --alert:#DB7059;
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);
+    font-family:"Archivo",system-ui,sans-serif;font-weight:400;line-height:1.62;
+    -webkit-font-smoothing:antialiased;letter-spacing:-.002em}
+  .wrap{max-width:820px;margin:0 auto;padding:0 24px}
+  section{padding:52px 0;border-top:1px solid var(--line)}
+  p{max-width:66ch}
+  a{color:var(--accent)}
+  code,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+  code{background:var(--surface-2);padding:1px 5px;border-radius:4px;font-size:.9em}
+  h1,h2,h3{font-weight:800;line-height:1.1;text-wrap:balance;margin:0}
+  h2{font-size:clamp(1.4rem,3.4vw,2rem);letter-spacing:-.02em}
+  h3{font-size:1.08rem;font-weight:700;margin:22px 0 6px}
+  .lede{font-size:1.14rem;color:var(--ink-soft);max-width:62ch}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:.72rem;font-weight:500;
+    letter-spacing:.22em;text-transform:uppercase;color:var(--accent);
+    display:flex;align-items:center;gap:12px;margin:0 0 20px}
+  .eyebrow::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  .hero{padding:70px 0 42px;border-top:none}
+  .kicker{font-family:"IBM Plex Mono",monospace;font-size:.72rem;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--ink-soft);
+    border:1px solid var(--line);border-radius:999px;padding:7px 14px;display:inline-block}
+  .hero h1{font-size:clamp(2.1rem,6vw,3.3rem);letter-spacing:-.02em;margin:22px 0 0}
+  .hero .sub{margin-top:18px;color:var(--ink-soft);max-width:60ch;font-size:1.12rem}
+
+  .tags{display:inline-flex;gap:6px;flex-wrap:wrap;vertical-align:middle}
+  .b{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:.6rem;
+    letter-spacing:.14em;text-transform:uppercase;border:1px solid var(--line);
+    border-radius:5px;padding:2px 6px;color:var(--ink-soft);vertical-align:middle}
+  .b.built{color:var(--secure);border-color:color-mix(in srgb,var(--secure) 55%,var(--line))}
+  .b.planned{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 55%,var(--line))}
+  .b.partial{color:var(--alert);border-color:color-mix(in srgb,var(--alert) 55%,var(--line))}
+
+  .note{margin:18px 0;padding:16px 20px;background:var(--surface);border-left:3px solid var(--accent);
+    border-radius:0 10px 10px 0}
+  .note.sec{border-left-color:var(--secure)}
+  .note p{margin:0}
+  .note .lbl{font-family:"IBM Plex Mono",monospace;font-size:.7rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--accent);display:block;margin-bottom:6px}
+  .note.sec .lbl{color:var(--secure)}
+
+  .flow{display:flex;flex-direction:column;gap:14px;margin-top:22px}
+  .step{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start}
+  .step .g{font-family:"IBM Plex Mono",monospace;color:var(--accent);font-weight:600;
+    font-size:1rem;line-height:1.6;width:1.6em;text-align:center}
+  .step p{margin:0;max-width:60ch}
+
+  pre.frame{margin:16px 0;padding:14px 16px;background:var(--surface-2);border-radius:10px;
+    overflow-x:auto;font-family:"IBM Plex Mono",monospace;font-size:.82rem;color:var(--ink)}
+  pre.frame b{color:var(--accent)} pre.frame i{color:var(--secure);font-style:normal}
+
+  .status{background:var(--surface);border:1px solid var(--line);border-radius:14px;
+    padding:24px 26px;box-shadow:var(--shadow)}
+  .cols{display:grid;grid-template-columns:1fr;gap:22px}
+  @media(min-width:680px){.cols{grid-template-columns:1fr 1fr}}
+  .cols h3{margin-top:0}
+  ul.lst{list-style:none;padding:0;margin:8px 0 0;display:flex;flex-direction:column;gap:8px}
+  ul.lst li{display:grid;grid-template-columns:auto 1fr;gap:10px;color:var(--ink-soft);font-size:.96rem}
+  .tick{color:var(--secure);font-weight:700} .todo{color:var(--accent);font-weight:700}
+
+  footer{border-top:1px solid var(--line);padding:28px 0 44px;color:var(--ink-soft);
+    font-family:"IBM Plex Mono",monospace;font-size:.74rem;letter-spacing:.04em}
+  footer .r{color:var(--accent)}
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="kicker">Long Haul · the technical rundown</span>
+    <h1>So you want to know how the sausage is made?</h1>
+    <p class="sub">No pitch, no arguments, no "why." If you're reading this you already get the
+      point — here's the <em>how</em>, from the ground up. Each piece is tagged
+      <span class="b built">built</span> (proven in simulation), <span class="b partial">partial</span>, or <span class="b planned">planned</span>
+      so you always know where the edge of reality is.</p>
+  </header>
+
+  <section>
+    <div class="eyebrow">Start here</div>
+    <h2>What is a puppet? <span class="tags"><span class="b built">built</span></span></h2>
+    <p>Everything in Long Haul rests on one idea, so start with it.</p>
+    <p>In Reticulum, every endpoint is a <strong>destination</strong>. A destination is built from an
+      <strong>Identity</strong> — a key pair — and that gives it two very different "names":</p>
+    <div class="flow">
+      <div class="step"><span class="g">1</span><p>A <span class="sec">destination hash</span> — a 16-byte
+        address derived from the Identity's public key. This is its <em>real</em> address, the thing
+        Reticulum actually routes on. It can't be copied, forged, or duplicated without the private key.</p></div>
+      <div class="step"><span class="g">2</span><p>A <strong>handle</strong> — a plain display label
+        (your label / display name) that any node can set to anything. It is <em>not</em> an address.
+        Twenty nodes can all call themselves "Bob."</p></div>
+    </div>
+    <p style="margin-top:16px">A <strong>puppet</strong> is a brand-new, fully independent Reticulum
+      destination that Long Haul creates and owns — its <em>own</em> Identity, its <em>own</em> keys, its
+      <em>own</em> hash — that simply <em>wears the handle</em> of a node living on the far mesh. It is
+      not a clone and it holds nobody else's keys. The only thing it borrows from the far node is the
+      human-readable handle, so you recognize it.</p>
+    <div class="note"><p><span class="lbl">Why it exists</span>The real far-side node lives on a mesh you
+      can't reach directly. The puppet is a local stand-in you can address like any other contact — and
+      because it's a genuine destination Long Haul owns, it can legitimately decrypt what you send it, as
+      the true endpoint, not as a snoop.</p></div>
+  </section>
+
+  <section>
+    <div class="eyebrow">The setup</div>
+    <h2>How Long Haul stands puppets up <span class="tags"><span class="b built">built</span></span></h2>
+    <p>Two gateways, one per site — call them <code>LH1</code> and <code>LH2</code>. Each runs a normal,
+      unmodified Reticulum node on its own mesh, and the two are joined only by the radio.</p>
+    <div class="flow">
+      <div class="step"><span class="g">→</span><p><strong>Roster sync.</strong> Over the HF leg, each
+        gateway tells the other which nodes are currently present on its mesh — presence and handles.</p></div>
+      <div class="step"><span class="g">→</span><p><strong>Auto-puppet.</strong> For every node on the far
+        mesh, the local gateway stands up a puppet (own keys/hash, far node's handle). When a node leaves
+        the far mesh, its puppet is torn down. It tracks the far side automatically so the roster stays live.</p></div>
+      <div class="step"><span class="g">→</span><p><strong>The crossing.</strong> You address puppet
+        <code>⟨Bob⟩</code> locally. That puppet <em>is</em> the endpoint, so it decrypts your message with
+        its own keys, hands the cleartext to the modem, and it goes over HF as a plain framed byte
+        pipe — <em>not</em> Reticulum, no Reticulum routing on that hop at all.</p></div>
+      <div class="step"><span class="g">→</span><p><strong>Re-origination.</strong> <code>LH2</code>
+        receives the bytes and re-originates: it injects a fresh, fully-encrypted Reticulum message into
+        mesh 2, from a puppet of <em>you</em>, addressed to the <em>real</em> Bob. Mesh 2 routes it
+        normally.</p></div>
+    </div>
+    <div class="note sec"><p><span class="lbl">The load-bearing idea</span>Reticulum routing never crosses
+      the cleartext leg. Each gateway <em>terminates</em> one encrypted Reticulum network and
+      <em>re-originates</em> into the other — a store-and-forward bridge between two healthy meshes, with a
+      plain byte pipe in the middle. Nothing about Reticulum is modified or stripped.</p></div>
+    <div class="note"><p><span class="lbl">Roster cadence</span>The roster isn't a constant beacon: it's
+      sent only when membership changes (a short burst), the channel stays silent when idle, and there's
+      just a slow backstop refresh — currently about every three minutes, but that's a placeholder, not a
+      tuned number, and likely a setting you'll be able to dial. A reliable ARQ link carries it along; a
+      fire-and-forget link repeats it a few times, since there's no acknowledgement. Syncing less often
+      means less airtime, less power draw, and less for a listener to watch — at the cost of slower
+      presence updates.</p></div>
+    <div class="note"><p><span class="lbl">Dropped frames</span>On the reliable ARQ path the modem
+      guarantees the whole message. On fire-and-forget, each message carries a checksum: it arrives
+      <em>whole and verified, or it's dropped</em> — never a half-message, and no request to resend. That
+      keeps fire-and-forget fast and light, which is its whole point; if a message has to arrive, you send
+      it over ARQ (the recommended mode).</p></div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Trust on an open channel</div>
+    <h2>How do we know a transmission is really from our station? <span class="tags"><span class="b built">built</span></span></h2>
+    <p>The HF leg is cleartext, and by law (Part 97) we can't encrypt it. So here's the fair worry: if
+      anyone on the frequency can hear our frames, anyone could also <em>transmit</em> a frame that looks
+      like it came from <code>LH2</code>. How does a gateway know a message it's about to inject into its
+      mesh really came from our trusted partner station — and not from some mischief-maker with a radio?</p>
+    <p>The answer isn't secrecy. It's <strong>signatures</strong>.</p>
+    <h3>What a signature is</h3>
+    <p>The sending gateway computes a cryptographic signature (<span class="mono">Ed25519</span>) over the
+      payload with its private key. The receiving gateway verifies it against the partner's public key,
+      which the two trusted stations exchanged once when they paired (see below). If it doesn't verify, the frame is dropped.
+      To stop anyone re-broadcasting a captured-but-valid frame, each message also carries a
+      <strong>signed timestamp</strong>: the receiver rejects anything outside a freshness window, and a
+      short cache catches duplicates inside it. The two gateways keep their clocks agreed <em>with each
+      other</em> automatically — every signed frame is a fresh time sample — so this needs no external
+      clock or GPS.</p>
+    <h3>How the two stations pair <span class="tags"><span class="b built">built</span></span></h3>
+    <p>So how do the two stations get each other's public keys in the first place — over an open channel
+      where a mischief-maker could try to slip in their own? You pair them once, with a short one-time
+      code. Both operators type the same code (say ten digits) into their gateways, and the two then run a
+      <strong>PAKE</strong> (password-authenticated key exchange) over the air: the code is woven into the
+      math, so only a party who knows it can complete the exchange, and a final check aborts if anyone
+      tried to sit in the middle. Under that code-authenticated exchange the gateways swap and store each
+      other's long-term signing keys — and the code is never needed again.</p>
+    <p>The one rule that keeps it safe: the code's secrecy <em>is</em> the trust. Anyone who has the code
+      could pair as you, so you share it out-of-band (in person, a call, an encrypted message), never on
+      the air — and if you ever think it leaked, you re-pair with a fresh one. Re-pairing is also how you
+      <strong>rotate keys</strong>: if a gateway is lost or compromised, a fresh pairing replaces the
+      trust cleanly.</p>
+    <h3>How that's different from encryption</h3>
+    <p>Encryption hides the <em>content</em>. A signature hides nothing — the message stays completely
+      readable in the clear. It only proves two things: <em>who</em> sent it, and that <em>nobody altered
+      it</em> in flight. Authentication, not obfuscation.</p>
+    <div class="note sec"><p><span class="lbl">Is it legal?</span>Yes. §97.113 bans messages "encoded for
+      the purpose of obscuring their meaning." A signature obscures no meaning — the message is still
+      plainly readable by anyone listening; the signature is just an appended authenticator riding
+      alongside it. Signing proves origin; it doesn't hide the message, so it doesn't run afoul of the
+      encryption rule.</p></div>
+  </section>
+
+  <section>
+    <div class="eyebrow">A real trade-off</div>
+    <h2>The signature is the gateway's, not the sender's <span class="tags"><span class="b built">built</span></span></h2>
+    <p>Here's the honest catch, and it's a deliberate design decision. The signature is created by the
+      <em>gateway</em>, not by the node that originally sent the message. So the far recipient can verify
+      the message came from a trusted Long Haul <em>station</em> — but not that it came from the specific
+      <em>end user</em> who typed it. Origin authenticity is vouched for by the two gateway operators, not
+      by a true end-to-end signature.</p>
+    <h3>Why we chose it that way</h3>
+    <p>Because gateway-to-gateway signing requires <strong>zero modification of Reticulum</strong>. Each
+      mesh runs stock, unmodified Reticulum; the signing lives entirely inside Long Haul, at the edge.
+      True end-to-end signing would mean changing the Reticulum nodes and clients themselves — and the
+      whole discipline of this project is <em>don't touch Reticulum</em>. So the trade is: in a closed,
+      trusted group you trust the two Long Haul stations (and their operators). That's the deliberate,
+      accepted cost of leaving Reticulum untouched.</p>
+    <div class="note sec"><p><span class="lbl">Where this stands</span>Signatures, the freshness window,
+      and PIN pairing are <em>built and verified in simulation</em>: the gateway now refuses any frame that
+      is unsigned, from an unknown key, forged, tampered, replayed, or stale, and a hostile-frame test
+      exercises every one of those classes. What's left is the real bar — it has run only in simulation,
+      <em>never on air</em>, and the pairing exchange gets a fresh security review before the first on-air
+      use. So the air leg is authenticated today in software; treat it as proven-in-sim, on-air-pending.</p></div>
+  </section>
+
+  <section>
+    <div class="eyebrow">A fine point people ask about</div>
+    <h2>Why send the handle over the air, not the hash? <span class="tags"><span class="b built">built</span></span></h2>
+    <p>Reticulum routes on the hash, so it's a fair question: why does the bridge address the far side by
+      <em>handle</em>?</p>
+    <p>Because the hash isn't portable across the two meshes. A puppet has its <em>own</em> hash —
+      different from the real node's hash — so the hash is <em>not</em> a shared identifier between a node
+      and its puppet. The one thing they have in common is the handle. It's the single stable name both
+      sides already agree on, so that's what the bridge uses to say "this one's for Bob."</p>
+    <p>Resolving it on the far side is simpler than it sounds — there's no shared lookup table to keep in
+      sync or to attack. Each gateway just watches the ordinary announces on <em>its own</em> mesh and
+      keeps a local handle → real-destination map. When a message crosses for "Bob," the far gateway
+      looks "Bob" up in that local map and hands off to the real Bob like any normal local delivery. The
+      map builds and maintains itself from announces each side already hears; neither gateway ever ships
+      its routing table over the air.</p>
+    <div class="note"><p><span class="lbl">To be exact</span>Inside each mesh, routing still uses the real
+      destination hash, exactly as normal Reticulum does. The handle is <em>only</em> the cross-bridge
+      addressing key — it never replaces the hash for local routing, and the hash never rides the air.</p></div>
+    <div class="note"><p><span class="lbl">Handle collisions</span>Because the handle is the addressing
+      key, two nodes with the same handle are a problem — and the hard part isn't the routing, it's a
+      human telling two "Bob"s apart. <strong>Long Haul handles it at the source, first come first
+      served:</strong> the node that picks a handle already in use anywhere across the two bridged meshes
+      gets a message from the Long Haul node — "handle already in use; far-side delivery unavailable until
+      it's unique." It can't force-rename you, but it's a real opt-out: while your handle collides, Long
+      Haul routes <em>nothing</em> for you in either direction until you fix it — and the original holder of
+      the name is never affected. If a collision still slips through, the gateway refuses to silently guess
+      and flags it rather than misrouting. <strong>Today, on-air routing uses the handle
+      itself</strong> (kept unique by that rule); the finished-product goal moves it to a short
+      <em>rotating</em> token, so a permanent tag never has to ride the air at all — which is also what
+      makes your roster and traffic pattern private to outside listeners.</p></div>
+    <div class="note"><p><span class="lbl">What tokens can't hide</span>Even once routing rides rotating
+      tokens, an outside listener still sees message <em>sizes and timing</em> — who transmits, when, and
+      how much. Hiding that (padding every message, sending cover traffic) costs bandwidth a ~100 B/s link
+      can't spare, so it's an accepted residual: the tokens hide <em>who</em> you are, not <em>that</em> a
+      transmission happened.</p></div>
+  </section>
+
+  <section>
+    <div class="eyebrow">The last details</div>
+    <h2>Callsign, layers, and why every frame</h2>
+
+    <h3>Where the callsign lives <span class="tags"><span class="b built">built</span></span></h3>
+    <p>Station ID lives at the <strong>modem-driver layer</strong>, not the message stack — because a
+      callsign identifies the <em>transmitter</em>, not the message. One transmission is one frame, laid
+      out like this:</p>
+    <pre class="frame">[ <b>payload</b> ][ <i>signature</i> ][ callsign trailer ]
+   \__________/   \_________/   \_______________/
+    the message    proves the    DE &lt;call&gt; — the
+    (cleartext)    sender         operator's station ID</pre>
+    <p>The signature covers the <strong>payload only, never the callsign</strong>. That's on purpose: a
+      relay may re-stamp its <em>own</em> callsign as it re-sends (third-party traffic, §97.115), so the
+      callsign has to be mutable hop-to-hop — if the signature covered it, every relay would break the
+      signature. Callsign last, so it's literally the last thing on the air.</p>
+
+    <h3>Why every frame, not just end-of-transmission <span class="tags"><span class="b built">built</span></span></h3>
+    <p>The callsign (<code>DE &lt;call&gt;</code>) is appended to <em>every</em> frame, WSPR/FT8-style.
+      Doing it that way auto-satisfies both §97.119 rules at once — the end-of-transmission ID <em>and</em>
+      the 10-minute ID — with no timer to run or forget. It also just works for fire-and-forget, where
+      there's no clean "end of transmission" to hang an ID on. Plus a hard gate: a transmitter with no
+      callsign set refuses to key at all.</p>
+
+    <h3>Adversarial mode <span class="tags"><span class="b built">built</span></span></h3>
+    <p>One switch takes Long Haul out of the <em>message</em> path — no more puppets, no
+      decrypt-and-re-originate — and lets native, fully-encrypted Reticulum ride straight over the modem,
+      for the day the rules no longer apply. The advantage of a switch over ripping Long Haul out is that
+      it stays in as the <em>plumbing</em>: it still handles the port wiring, the node and modem
+      connection, ALE frequency selection, and the rest of the transport setup. So you flip one flag and
+      everything is already wired — instead of hand-configuring Reticulum onto the radio from scratch on
+      the day you need it most.</p>
+    <div class="note"><p><span class="lbl" style="color:var(--alert)">Status</span>The flip is <em>built</em>
+      and, thanks to a turn-aware modem shim, so is <em>delivery</em>: a Reticulum message now crosses both
+      ways in the encrypted mode (~66 s in simulation), with a tap on the modem port confirming only ciphertext
+      leaves and no station ID or readable metadata riding along. The shim fragments each packet to the modem's
+      frame and TDMA-paces the two half-duplex stations so they don't key over each other. Caveats, said plainly:
+      <em>proven in simulation only, never on air</em>; V1 is Mercury broadcast + opportunistic messages only
+      (Direwolf/AX.25 and ARQ modems still need their own shims); the data cap is <em>not</em> enforced in this
+      mode, since Long Haul is out of the path; and the legal-gate modal wording is a draft pending attorney
+      review.</p></div>
+
+    <h3>The UI <span class="tags"><span class="b built">built</span></span></h3>
+    <p>Two-sided config: one side connects to your Reticulum node, the other picks your modem and its
+      settings. The piece that turns a working proof into something an operator can actually run.</p>
+
+    <h3>Long Haul is a node you can talk to <span class="tags"><span class="b built">built</span></span></h3>
+    <p>Long Haul isn't just an invisible pipe. It stands up its <em>own</em> destination on the mesh — the
+      same way it makes puppets — so it shows up in any normal Reticulum client as a contact called "Long
+      Haul," and you message it like anyone else. That's the channel for the rest of this: the
+      handle-collision nudge arrives as a DM <em>from</em> it, C2 commands are DMs <em>to</em> it, and
+      data-cap bounces and status readouts come back from it. Each gateway has its own on its own mesh —
+      you talk to your local Long Haul for local settings, and it relays across the hop to reconfigure the
+      far one.</p>
+
+    <h3>Data caps <span class="tags"><span class="b built">built</span></span></h3>
+    <p>HF is slow — on a clean channel Long Haul moves roughly 100 bytes a second, so a 200&nbsp;KB photo
+      is about half an hour and something bigger could tie up the leg for the rest of the day. So each
+      link gets a data ceiling — and it's <strong>yours to set</strong>, not some fixed number baked in.
+      You tune the cap to your band, your modem, and how your group actually uses the link: raise it on a
+      fast, quiet channel; clamp it down when conditions are marginal or the leg is busy. (And per the
+      section below, you can change it remotely, on either gateway.)</p>
+    <p>Today the gateway already <em>paces</em> its writes to the modem's own queue so nothing overruns it
+      <span class="b built">built</span>. The operator-facing half is <span class="b built">built</span> too:
+      address a puppet with something over the cap and the puppet answers you right back — on your own
+      mesh, instantly — with a plain error like <code>file exceeds the HF limit — compress or split and
+      resend</code>. The oversized message bounces at the puppet, before the radio ever keys, so you find
+      out on the spot instead of burning airtime discovering it.</p>
+
+    <h3>Command &amp; control <span class="tags"><span class="b built">built</span></span></h3>
+    <p>An unattended station you can't walk over to still needs managing — you do it by messaging the
+      Long Haul node itself (above). Because C2 rides on the signature layer, a command is just authenticated traffic — a signed <em>instruction</em> instead of
+      a signed message. No new mechanism, and legal the same way signatures are (cleartext, just
+      authenticated).</p>
+    <p>What you'll be able to set remotely: <strong>ALE settings, the data caps above, and the other
+      variables Long Haul manages</strong>. And it works in both directions — you can reconfigure your
+      <em>local</em> gateway (the in-mesh instance) or reach across the hop to reconfigure the <em>far</em>
+      gateway (the cross-hop instance). So an operator can tune a station on the far end of the country
+      without leaving home, and every command carries proof it came from you.</p>
+    <p>And it's gated. Changing Long Haul's settings is not open to just anyone on the mesh — only the
+      station owner, or users the owner has authorized, can do it, behind a login / verification step.
+      Ordinary mesh users send and receive traffic freely; reconfiguring the gateway is a privilege, not
+      a default.</p>
+    <div class="note"><p><span class="lbl" style="color:var(--alert)">Status</span>The near-side half is
+      <em>built</em>: you DM your local Long Haul node and it answers <code>status</code>, arms pairing,
+      re-announces, sets the data cap, switches the modem, and restarts — gated to allow-listed nodes and
+      audited. And the far-side half is <em>built</em> too: the settings the two paired gateways <em>share</em>
+      — the modem/band, the data cap, and the operating frequency — now change on <em>both</em> sides at once
+      through a safe, signed handshake with <strong>auto-revert</strong>. If the new setting doesn't
+      re-establish contact, each gateway independently rolls back to the last-known-good — and because the
+      channel itself is what changed, the revert can never be a message over the (possibly dead) new link.
+      Proven in simulation; the only leftovers are a read-only peek at the far gateway's status and a small
+      ack layer for coordinating over fire-and-forget.</p></div>
+
+    <h3>Browse NomadNet pages &amp; files over the radio <span class="tags"><span class="b built">built</span></span></h3>
+    <p>NomadNet is Reticulum's built-in web — pages and file shares that nodes host for each other. Long Haul
+      carries the read/download half across the HF bridge: it <em>puppets</em> a far NomadNet node on your mesh,
+      so browsing that puppet turns each page or file fetch into a signed request relayed over the radio — the
+      far gateway pulls the real page from its own local mesh and relays the bytes back. Because pages and files
+      are <em>public</em> content, the relay is cleartext, station-ID'd, and data-cap bounded — §97-clean like
+      everything else (sign, don't encrypt). It's slow over HF (a page is several radio frames of seconds each,
+      so a holding page shows while it fetches), and an over-cap file is refused with its name and size before
+      the radio ever keys. Proven in simulation against a real NomadNet node. V1 is static pages + file
+      downloads — no scripts or forms, no hopping off to other nodes; and it's not voice, not transparent
+      transport.</p>
+
+    <h3>Encrypted-content guard <span class="tags"><span class="b built">built</span></span></h3>
+    <p>The whole legality of Long Haul rests on cleartext going out over the air. It strips Reticulum's own
+      encryption — but a file someone <em>already</em> encrypted with outside tools (a GPG/age blob, an
+      encrypted zip) would still be ciphertext after that strip, and putting <em>that</em> on the air is
+      illegal. So a guard screens every message and file at the transmit edge and <strong>refuses to key the
+      radio</strong> with anything that looks encrypted, bouncing a plain reason back to the sender. It knows
+      the common encryption signatures, passes legitimate binaries (JPEG/PNG/PDF/media) so they aren't
+      false-flagged, and catches leftover near-random blobs by their randomness. <strong>Honest limit:</strong>
+      perfect detection is impossible — it can't see inside every container or stop a deliberate evader — so
+      it's a best-effort guard against honest mistakes, and the licensed operator stays responsible. It
+      fail-closes, and can be set to reject / warn / off.</p>
+
+    <h3>Turning the radio's dial <span class="tags"><span class="b built">built</span></span></h3>
+    <p>Long Haul owns the modem; optionally, it can own the radio's <em>dial</em> too. Through hamlib it reads
+      and sets the rig's frequency and mode — and every set <em>reads the value back off the radio</em> and
+      reports what the dial actually did, never a number it just assumed. That unlocks a <strong>coordinated
+      QSY</strong>: change frequency on one gateway and both paired stations re-dial together at a shared
+      instant, with the same auto-revert as a modem change — if the new frequency doesn't re-establish contact,
+      both roll back. It only tunes inside operator-configured allowed band segments (empty = refuse everything;
+      Long Haul invents no band edges it has no authority over) and is off by default. Proven in simulation
+      against hamlib's dummy rig — not yet on a real radio.</p>
+  </section>
+
+  <section>
+    <div class="eyebrow">Where it stands</div>
+    <h2>What's built, what's planned</h2>
+    <div class="status">
+      <div class="cols">
+        <div>
+          <h3 style="color:var(--secure)">Built &amp; proven in simulation</h3>
+          <ul class="lst">
+            <li><span class="tick">✓</span><span>Puppets, roster sync, auto stand-up / tear-down.</span></li>
+            <li><span class="tick">✓</span><span>Full flow over Mercury ARQ — both directions, files, noisy and harsh channels.</span></li>
+            <li><span class="tick">✓</span><span>AX.25 connected mode over Direwolf — a second modem family, same gateway.</span></li>
+            <li><span class="tick">✓</span><span>Handle-addressed bridge; Reticulum untouched on both meshes.</span></li>
+            <li><span class="tick">✓</span><span>Callsign injection every frame + refuse-to-key gate (§97.119).</span></li>
+            <li><span class="tick">✓</span><span>Gateway signatures + freshness + PIN pairing — the air leg is authenticated.</span></li>
+            <li><span class="tick">✓</span><span>Handle-collision handling (first come, first served).</span></li>
+            <li><span class="tick">✓</span><span>Long Haul control node + near-side command &amp; control.</span></li>
+            <li><span class="tick">✓</span><span>Per-link data caps with a bounce-back before the radio keys.</span></li>
+            <li><span class="tick">✓</span><span>The config / picker UI + a native tab in the station app.</span></li>
+            <li><span class="tick">✓</span><span>Adversarial mode — flip <em>and</em> delivery (Mercury broadcast, ciphertext-only on the air).</span></li>
+            <li><span class="tick">✓</span><span>Coordinated far-side control — modem/band, data cap &amp; frequency change on both gateways at once, with auto-revert.</span></li>
+            <li><span class="tick">✓</span><span>Browse NomadNet pages &amp; files over the radio — cleartext, station-ID'd, cap-bounded.</span></li>
+            <li><span class="tick">✓</span><span>Encrypted-content guard — refuses to transmit already-encrypted content (keeps the air leg legal).</span></li>
+            <li><span class="tick">✓</span><span>Radio dial (CAT) control + coordinated QSY — retune both stations together, auto-revert.</span></li>
+          </ul>
+        </div>
+        <div>
+          <h3 style="color:var(--accent)">Partial &amp; planned</h3>
+          <ul class="lst">
+            <li><span class="todo">→</span><span>More modem drivers (VARA HF / FM; ARDOP driver written, not yet proven in sim).</span></li>
+            <li><span class="todo">→</span><span>Adversarial mode on Direwolf/AX.25 &amp; ARQ modems (Mercury broadcast works today).</span></li>
+            <li><span class="todo">→</span><span>Live transfer readout and ALE frequency selection.</span></li>
+            <li><span class="todo">→</span><span>On-air validation — everything above is simulation-proven only.</span></li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin:22px 0 0;font-size:1.05rem;color:var(--ink)"><strong>The next bar</strong> is the
+        same for all of it: off the bench and onto real radios, between real operators.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">How you can help</div>
+    <h2>Bring a radio and try to break it.</h2>
+    <p>This is early R&amp;D that needs other hams more than it needs anything else — someone to stand up a
+      second station, run a modem or band it hasn't seen, and poke holes in the parts that only look
+      solid. If that's you, come find the project and dig in.</p>
+    <p><a href="#">[ repo / discussion link — coming soon ]</a></p>
+  </section>
+
+  <footer>
+    <span class="r">LONG HAUL</span> · how it works, not why · very early R&amp;D · built &amp; proven in simulation, 2026
+  </footer>
+
+</div>
